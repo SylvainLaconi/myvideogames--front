@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Container } from "semantic-ui-react";
 import axios from "axios";
 import { useHistory } from "react-router";
+import { plateforms } from "./Plateforms";
 
 const options = [
   { key: "PS4", text: "Playstation 4", value: "Playstation 4" },
@@ -59,7 +60,7 @@ const Formulaire = () => {
           <Form.Select
             fluid
             label="Plateform"
-            options={options}
+            options={plateforms}
             placeholder="Plateform"
             value={plateform}
             onChange={(e, { value }) => setPlateform(value)}

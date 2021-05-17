@@ -7,15 +7,20 @@ import {
   Loader,
   Container,
   Button,
+  Input,
+  Select,
 } from "semantic-ui-react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import "./Home.css";
+import { plateforms } from "./Plateforms";
 
 const Home = () => {
   const [result, setResult] = useState([]);
   const [loading, setLoading] = useState(true);
   const [display, setDisplay] = useState("alphabet");
+  const [name, setName] = useState("");
+  const [device, setDevice] = useState("");
 
   //GetMyGames
   const getMyGames = async () => {
@@ -49,19 +54,33 @@ const Home = () => {
       <Container textAlign="center" className="sort-ctn">
         <Button
           icon="sort alphabet down"
-          size="big"
+          size="medium"
           onClick={() => setDisplay("alphabet")}
         />
         <Button
           icon="sort descending"
           content="rating"
-          size="big"
+          size="medium"
           onClick={() => setDisplay("rating")}
+        />
+        <Input
+          icon="search"
+          placeholder="Search..."
+          size="medium"
+          onChange={(e) => setName(e.target.value)}
+        />
+        <Select
+          placeholder="Select plateform"
+          options={plateforms}
+          size="big"
+          onChange={(e, { value }) => setDevice(value)}
         />
       </Container>
       {display === "alphabet" ? (
         <Grid container doubling columns={4}>
           {result
+            .filter((item) => item.plateform.includes(device))
+            .filter((item) => item.title.toLowerCase().includes(name))
             .sort((a, b) => a.title.localeCompare(b.title))
             .map((item) => (
               <Grid.Column>
@@ -77,10 +96,12 @@ const Home = () => {
               </Grid.Column>
             ))}
         </Grid>
-      ) : display === "rating" ? (
+      ) : (
         <Grid container doubling columns={4}>
           {result
-            .sort((a, b) => b.id < a.id)
+            .filter((item) => item.plateform.includes(device))
+            .filter((item) => item.title.toLowerCase().includes(name))
+            .sort((a, b) => b.rate - a.rate)
             .map((item) => (
               <Grid.Column>
                 <Card
@@ -95,8 +116,6 @@ const Home = () => {
               </Grid.Column>
             ))}
         </Grid>
-      ) : (
-        "null"
       )}
     </Container>
   );
